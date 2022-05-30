@@ -2,10 +2,13 @@ package com.employeeapirest.app.controller;
 
 import com.employeeapirest.app.entity.Role;
 import com.employeeapirest.app.entity.User;
+import com.employeeapirest.app.payload.EmployeeDTO;
+import com.employeeapirest.app.payload.JwtAuthResponseDTO;
 import com.employeeapirest.app.payload.LogInDTO;
 import com.employeeapirest.app.payload.SignUPDTO;
 import com.employeeapirest.app.repository.RoleRepository;
 import com.employeeapirest.app.repository.UserRepository;
+import com.employeeapirest.app.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +41,9 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUPDTO signUPDTO){
 
@@ -67,14 +73,18 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> logIn(@RequestBody LogInDTO logInDTO){
+    public ResponseEntity<JwtAuthResponseDTO> logIn(@RequestBody LogInDTO logInDTO){
 
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(logInDTO.getUsernameOrEmail(), logInDTO.getPassword()));
 
+
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return new ResponseEntity<>("User logged in successfully", HttpStatus.CREATED);
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        return new ResponseEntity<>(new JwtAuthResponseDTO(token), HttpStatus.CREATED);
 
     }
 

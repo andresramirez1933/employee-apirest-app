@@ -47,9 +47,9 @@ public class ConfigSecurity {
 
     }
 
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+    /*protected void configure(AuthenticationManagerBuilder auth) throws Exception{
         auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
-    }
+    }*/
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

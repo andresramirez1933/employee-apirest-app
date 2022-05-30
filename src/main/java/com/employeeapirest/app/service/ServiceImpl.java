@@ -68,6 +68,15 @@ public class ServiceImpl implements ServiceEmployee {
 
     }
 
+    @Override
+    public void deleteEmployee(Long employeeId) {
+
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() ->
+                new ResourceNotFound("Employee", "id", employeeId));
+
+        employeeRepository.delete(employee);
+    }
+
     private Employee mapToEntity(EmployeeDTO employeeDTO){
 
         return modelMapper.map(employeeDTO, Employee.class);

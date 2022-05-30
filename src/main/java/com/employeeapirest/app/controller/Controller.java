@@ -31,5 +31,11 @@ public class Controller {
         return new ResponseEntity<>(serviceEmployee.listEmployees(),HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("id") Long employeeId){
+
+        return new ResponseEntity<EmployeeDTO>(serviceEmployee.getEmployeeById(employeeId),HttpStatus.OK);
+    }
+
 
 }

@@ -12,5 +12,7 @@ public interface ServiceEmployee {
 
     EmployeeDTO registerEmployee(EmployeeDTO employeeDTO);
 
+    EmployeeDTO getEmployeeById(Long employeeId);
+
 
 }

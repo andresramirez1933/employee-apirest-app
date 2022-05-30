@@ -1,6 +1,7 @@
 package com.employeeapirest.app.service;
 
 import com.employeeapirest.app.entity.Employee;
+import com.employeeapirest.app.exceptions.ResourceNotFound;
 import com.employeeapirest.app.payload.EmployeeDTO;
 import com.employeeapirest.app.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
@@ -38,6 +39,17 @@ public class ServiceImpl implements ServiceEmployee {
         Employee savedEmployee = employeeRepository.save(employee);
 
         return mapToDTO(savedEmployee);
+
+    }
+
+    @Override
+    public EmployeeDTO getEmployeeById(Long employeeId) {
+
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() ->
+                new ResourceNotFound("Employee", "id", employeeId));
+
+
+        return mapToDTO(employee);
 
     }
 

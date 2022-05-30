@@ -1,7 +1,7 @@
 package com.employeeapirest.app.service;
 
 import com.employeeapirest.app.entity.Employee;
-import com.employeeapirest.app.exceptions.ResourceNotFound;
+import com.employeeapirest.app.exceptions.ResourceNotFoundException;
 import com.employeeapirest.app.payload.EmployeeDTO;
 import com.employeeapirest.app.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +45,7 @@ public class ServiceImpl implements ServiceEmployee {
     public EmployeeDTO getEmployeeById(Long employeeId) {
 
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(() ->
-                new ResourceNotFound("Employee", "id", employeeId));
+                new ResourceNotFoundException("Employee", "id", employeeId));
 
 
         return mapToDTO(employee);
@@ -57,7 +56,7 @@ public class ServiceImpl implements ServiceEmployee {
     public EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO employeeDTO) {
 
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(() ->
-                new ResourceNotFound("Employee", "id", employeeId));
+                new ResourceNotFoundException("Employee", "id", employeeId));
 
         employee.setName(employeeDTO.getName());
         employee.setRole(employeeDTO.getRole());
@@ -72,7 +71,7 @@ public class ServiceImpl implements ServiceEmployee {
     public void deleteEmployee(Long employeeId) {
 
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(() ->
-                new ResourceNotFound("Employee", "id", employeeId));
+                new ResourceNotFoundException("Employee", "id", employeeId));
 
         employeeRepository.delete(employee);
     }

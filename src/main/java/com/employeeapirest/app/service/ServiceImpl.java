@@ -53,6 +53,21 @@ public class ServiceImpl implements ServiceEmployee {
 
     }
 
+    @Override
+    public EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO employeeDTO) {
+
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() ->
+                new ResourceNotFound("Employee", "id", employeeId));
+
+        employee.setName(employeeDTO.getName());
+        employee.setRole(employeeDTO.getRole());
+
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        return mapToDTO(updatedEmployee);
+
+    }
+
     private Employee mapToEntity(EmployeeDTO employeeDTO){
 
         return modelMapper.map(employeeDTO, Employee.class);

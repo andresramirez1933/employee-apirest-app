@@ -7,6 +7,7 @@ import com.employeeapirest.app.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -46,7 +47,8 @@ public class ConfigSecurity {
                  .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                  .and()
                  .authorizeRequests()
-                 .antMatchers("/api/auth/**").permitAll()
+                 .antMatchers("/api/v1/auth/**").permitAll()
+                 .antMatchers( HttpMethod.GET, "/api/v1/employees/**").permitAll()
                  .anyRequest()
                  .authenticated();
          http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

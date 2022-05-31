@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,7 @@ public class Controller {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
-    public ResponseEntity<EmployeeDTO> registerEmployee(@RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity<EmployeeDTO> registerEmployee(@Valid @RequestBody EmployeeDTO employeeDTO){
 
         return new ResponseEntity<EmployeeDTO>(serviceEmployee.registerEmployee(employeeDTO),HttpStatus.CREATED);
     }
@@ -37,12 +38,14 @@ public class Controller {
         return new ResponseEntity<EmployeeDTO>(serviceEmployee.getEmployeeById(employeeId),HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable("id") Long employeeId, @RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity<EmployeeDTO> updateEmployee(@Valid @PathVariable("id") Long employeeId, @RequestBody EmployeeDTO employeeDTO){
 
         return new ResponseEntity<EmployeeDTO>(serviceEmployee.updateEmployee(employeeId, employeeDTO),HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEmployee(@PathVariable("id") Long employeeId){
 

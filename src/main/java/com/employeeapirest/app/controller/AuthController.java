@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collections;
 
 @RestController
@@ -45,7 +46,7 @@ public class AuthController {
     private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody SignUPDTO signUPDTO){
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUPDTO signUPDTO){
 
         if(userRepository.existsByUsername(signUPDTO.getUsername())){
             return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
@@ -73,7 +74,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthResponseDTO> logIn(@RequestBody LogInDTO logInDTO){
+    public ResponseEntity<JwtAuthResponseDTO> logIn(@Valid @RequestBody LogInDTO logInDTO){
 
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(logInDTO.getUsernameOrEmail(), logInDTO.getPassword()));

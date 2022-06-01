@@ -49,6 +49,10 @@ public class ConfigSecurity {
                  .authorizeRequests()
                  .antMatchers("/api/v1/auth/**").permitAll()
                  .antMatchers( HttpMethod.GET, "/api/v1/employees/**").permitAll()
+                 .antMatchers("/v2/api-docs/**").permitAll()
+                 .antMatchers("/swagger-ui/**").permitAll()
+                 .antMatchers("/swagger-resources/**").permitAll()
+                 .antMatchers("/webjars/**").permitAll()
                  .anyRequest()
                  .authenticated();
          http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

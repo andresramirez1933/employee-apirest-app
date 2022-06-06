@@ -53,6 +53,7 @@ public class ConfigSecurity {
                  .antMatchers("/swagger-ui/**").permitAll()
                  .antMatchers("/swagger-resources/**").permitAll()
                  .antMatchers("/webjars/**").permitAll()
+                 .antMatchers("/error/**").permitAll()
                  .anyRequest()
                  .authenticated();
          http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

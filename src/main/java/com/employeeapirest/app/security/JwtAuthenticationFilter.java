@@ -1,5 +1,9 @@
 package com.employeeapirest.app.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,23 +31,49 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        //get token from request
-        String token = getTokenFromRequest(request);
-        //validate token
-        if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
-            //get username from token
-            String username = jwtTokenProvider.getUsernameFromToken(token);
 
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        try {
+            //get token from request
+            String token = getTokenFromRequest(request);
+            //validate token
+            if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
+                //get username from token
+                String username = jwtTokenProvider.getUsernameFromToken(token);
 
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
-                    null, userDetails.getAuthorities());
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
+                        null, userDetails.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+
+            filterChain.doFilter(request, response);
+        }catch (SignatureException ex){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT signature");
+
         }
+        catch (MalformedJwtException ex){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT token");
 
-        filterChain.doFilter(request,response);
+        }
+        catch (ExpiredJwtException ex){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Expired JWT token");
 
+        }
+        catch (UnsupportedJwtException ex){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Unsupported JWT token");
+
+        }
+        catch (IllegalArgumentException ex){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT claims string is empty");
+
+        }
     }
 
     public String getTokenFromRequest(HttpServletRequest request){

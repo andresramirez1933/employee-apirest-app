@@ -44,13 +44,9 @@ public class JwtTokenProvider {
 
     //validate token
     public boolean validateToken(String token){
-        try{
+
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
-        }catch (SignatureException ex){
-            throw new EmployeeApiException(HttpStatus.BAD_REQUEST, "Invalid token");
-
-        }
     }
 
 }

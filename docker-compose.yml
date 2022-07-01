@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  #name of the mysql container
+  employee-mysql:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123
+      - MYSQL_DATABASE=employees
+      - MYSQL_PASSWORD=admin123
+
+    ports:
+      - 3308:3306
+
+  #name of the app container
+  myapp-main:
+    image: employee-app
+    build: .
+    restart: on-failure
+    depends_on:
+      - employee-mysql
+    ports:
+      - 8010:8080
+    environment:
+
+      - DATABASE_PASSWORD=admin123
+      - DATABASE_NAME=employees
+      - DATABASE_PORT=3308

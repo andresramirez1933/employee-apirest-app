@@ -12,6 +12,8 @@ public interface ServiceEmployee {
 
     EmployeeDTO registerEmployee(EmployeeDTO employeeDTO);
 
+    List<EmployeeDTO> findByRole(String role);
+
     EmployeeDTO getEmployeeById(Long employeeId);
 
     EmployeeDTO updateEmployee(Long idEmployee, EmployeeDTO employeeDTO);

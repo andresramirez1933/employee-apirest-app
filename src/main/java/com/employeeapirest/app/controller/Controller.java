@@ -38,6 +38,12 @@ public class Controller {
         return new ResponseEntity<EmployeeDTO>(serviceEmployee.getEmployeeById(employeeId),HttpStatus.OK);
     }
 
+    // it gets employees by role
+    @GetMapping("/role/{role}")
+    public ResponseEntity<List<EmployeeDTO>> getEmployeeByRole(@PathVariable("role") String role){
+
+        return new ResponseEntity<>(serviceEmployee.findByRole(role),HttpStatus.OK);
+    }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeDTO> updateEmployee(@Valid @PathVariable("id") Long employeeId, @RequestBody EmployeeDTO employeeDTO){

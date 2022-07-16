@@ -1,9 +1,10 @@
-package com.employeeapirest.app.service;
+package com.employeeapirest.app.service.impl;
 
 import com.employeeapirest.app.entity.Employee;
 import com.employeeapirest.app.exceptions.ResourceNotFoundException;
 import com.employeeapirest.app.payload.EmployeeDTO;
 import com.employeeapirest.app.repository.EmployeeRepository;
+import com.employeeapirest.app.service.ServiceEmployee;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,15 @@ public class ServiceImpl implements ServiceEmployee {
         Employee savedEmployee = employeeRepository.save(employee);
 
         return mapToDTO(savedEmployee);
+
+    }
+
+    @Override
+    public List<EmployeeDTO> findByRole(String role) {
+
+        List<Employee> employees = employeeRepository.findByRole(role);
+
+        return employees.stream().map(employee -> mapToDTO(employee)).collect(Collectors.toList());
 
     }
 
